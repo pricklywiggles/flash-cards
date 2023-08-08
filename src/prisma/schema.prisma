@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(30)
+  email    String  @unique
+  password String
+  isAdmin  Boolean @default(false)
+  decks    Deck[]
+  cards    Card[]
+}
+
+model Deck {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(50)
+  description String    @db.VarChar(255)
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  imageUrl    String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  cards       Card[]
+}
+
+model Card {
+  id              Int       @id @default(autoincrement())
+  front           String
+  back            String
+  deck            Deck      @relation(fields: [deckId], references: [id])
+  deckId          Int
+  author          User      @relation(fields: [authorId], references: [id])
+  authorId        Int
+  position        Int
+  createdAt       DateTime  @default(now())
+  publishedAt     DateTime?
+  sourceCard      Card?     @relation("CardToCard", fields: [sourceCardId], references: [id])
+  sourceCardId    Int?
+  duplicatedCards Card[]    @relation("CardToCard")
+
+  @@unique([deckId, position])
+}
