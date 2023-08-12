@@ -38,7 +38,8 @@ body {
   background: linear-gradient(
       45deg,
       hsla(0, 0%, 0%, 30%),
-      hsla(0, 0%, 100%, 50%)
+      hsla(0, 0%, 20%, 30%),
+      hsla(0, 0%, 100%, 40%)
     )
     border-box;
   -webkit-mask:
@@ -46,4 +47,31 @@ body {
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
+  pointer-events: none;
 }
+
+.glare {
+  background: linear-gradient(
+    to bottom left,
+    hsla(0, 0%, 100%, 0.1),
+    hsla(0, 0%, 60%, 0.2),
+    hsla(0, 0%, 60%, 0.5)
+  ); /* Gradient from bottom left to top right */
+}
+
+.glare-slate {
+  background: linear-gradient(
+    to bottom left,
+    hsla(229, 84%, 90%, 0.1),
+    hsla(222, 47%, 65%, 0.2),
+    hsla(217, 41%, 59%, 0.5)
+  ); /* Gradient from bottom left to top right */
+}
+
+/*
+//rgb(30 41 59) slate-800
+hsla(217, 41%, 59%, 1);
+//rgb(15 23 42) slate-900
+hsla(222, 47%, 11%, 1);
+//rgb(2 6 23) slate-950
+hsla(229, 84%, 5%, 1)*/

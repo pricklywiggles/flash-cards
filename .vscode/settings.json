@@ -53,5 +53,9 @@
   "prettier.singleQuote": true,
   "typescript.preferences.quoteStyle": "single",
   "javascript.preferences.quoteStyle": "single",
-  "prettier.jsxSingleQuote": true
+  "prettier.jsxSingleQuote": true,
+  "prettier.trailingComma": "none",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }

@@ -1,14 +1,14 @@
-import { getServerSession } from 'next-auth/next';
-import { useSession } from '@/hooks/useSession';
-import Link from 'next/link';
+import { readSession } from "@/lib/server_utils";
+import { getServerSession } from "next-auth/next";
+import Link from "next/link";
 
 const Header = async () => {
-  const session = await getServerSession();
-  console.log({ session });
+  const session = await readSession();
+  console.log({ headersession: session });
   return (
-    <header className="flex w-full py-4 px-5">
+    <header className="flex w-full px-5 py-4">
       {session ? (
-        <div className="ml-auto">{session?.user?.email}</div>
+        <div className="ml-auto">{session.email}</div>
       ) : (
         <Link href="/login">Login</Link>
       )}

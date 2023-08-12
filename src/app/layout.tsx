@@ -31,7 +31,7 @@ export default function RootLayout({
             }}
           />
         </div>
-        {children}
+        <main className="isolate">{children}</main>
       </body>
     </html>
   );

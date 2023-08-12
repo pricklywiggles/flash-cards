@@ -1,72 +1,66 @@
-import { useForm } from "@/hooks/useForm";
-import { Button } from "./forms/Button";
+'use client';
+import { useForm } from 'controlled-form-hook';
+import { Button } from './forms/Button';
 import {
   isPresent,
   maxChars,
-  minChars,
-} from "tiny-validation/build/main/lib/validators";
-import { FComponent } from "@/types/common";
-import TextInput from "./forms/TextInput";
+  minChars
+} from 'tiny-validation/build/main/lib/validators';
+import { FComponent } from '@/types/common';
+import TextInput from './forms/TextInput';
 
-export const CreateDeckForm: FComponent<{ onClose?: () => void }> = ({
-  onClose,
+export const CreateDeckForm: FComponent<{ onClose?: (id: number) => void }> = ({
+  onClose
 }) => {
-  const submit = async ({
-    name,
-  }: // description
-  {
-    name: string;
-    // description: string;
-  }) => {
-    console.log({
-      name,
-      // description
+  const submit = async ({ name }: { name: string }) => {
+    return fetch('/api/decks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name
+      })
+    }).then(async (res) => {
+      const deck = await res.json();
+      if (res.status === 200) {
+        onClose?.(deck.id);
+      } else {
+        const { error } = await res.json();
+        console.error(error);
+      }
     });
-    onClose?.();
-    return Promise.resolve();
   };
 
   const {
     handleSubmit,
-    handleFieldChange,
+    handleChange,
     isSubmitting,
     isDisabled,
     values,
-    errors,
+    errors
   } = useForm({
     onSubmit: submit,
     stableSchema,
     initialValues: {
-      name: "",
-      // description: ''
-    },
+      name: ''
+    }
   });
-  console.log(errors);
 
   return (
     <div className="">
-      <div>What is the topic of this flash deck?</div>
+      <div id="deckname-label">What is the topic of this flash deck?</div>
       <form className="grid gap-2" onSubmit={handleSubmit}>
         <TextInput
-          id="name"
           name="name"
-          type="text"
+          aria-labelledby="deckname-label"
           data-1p-ignore
           value={values.name}
-          onChange={(name) => handleFieldChange({ name: "name", value: name })}
+          onChange={handleChange('name')}
           placeholder="Useful math formulas"
           className="mt-1 block w-full appearance-none rounded-md border border-gray-600 bg-black px-3 py-2 text-gray-300 placeholder-gray-500 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
         />
-        {/* <input
-          id="description"
-          name="description"
-          type="text"
-          value={values.description}
-          onChange={handleFieldChange}
-          placeholder="50 calcululs and algebra formulas from high school and college."
-          required
-          className="mt-1 block w-full appearance-none rounded-md bg-black border border-gray-600 px-3 py-2 placeholder-gray-500 text-gray-300 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
-        /> */}
+
         <Button type="submit" isSubmitting={isSubmitting}>
           Create
         </Button>
@@ -76,6 +70,6 @@ export const CreateDeckForm: FComponent<{ onClose?: () => void }> = ({
 };
 
 const stableSchema = {
-  name: [isPresent(), minChars(10), maxChars(50)],
+  name: [isPresent(), minChars(10), maxChars(50)]
   // description: [isPresent(), minChars(10), maxChars(255)]
 };

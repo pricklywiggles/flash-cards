@@ -1,24 +1,26 @@
-import Link from 'next/link';
-import prisma from '@/lib/prisma';
-import { CreateDeck } from '@/components/CreateDeck';
+import Link from "next/link";
+import prisma from "@/lib/prisma";
+import { CreateDeck } from "@/components/CreateDeck";
 
 export default async function Page() {
   const decks = await prisma.deck.findMany({
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: "desc",
+    },
   });
 
   return (
-    <main className="relative">
+    <div className="relative">
       <CreateDeck />
 
-      <div>Deck List</div>
-      {decks.map((deck) => (
-        <Link key={deck.id} href={`/decks/${deck.id}`}>
-          {deck.name}
-        </Link>
-      ))}
-    </main>
+      <ul>
+        Deck List
+        {decks.map((deck) => (
+          <li key={deck.id}>
+            <Link href={`/decks/${deck.id}`}>{deck.name}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

@@ -1,19 +1,51 @@
-import * as React from "react";
-import { FComponent } from "@/types/common";
-import { AriaTextFieldProps, useButton, useTextField } from "react-aria";
-import { useObjectRef } from "@react-aria/utils";
+import * as React from 'react';
+import { FComponent } from '@/types/common';
+import { AriaTextFieldProps, useButton, useTextField } from 'react-aria';
+import { useObjectRef } from '@react-aria/utils';
+
+export type HtmlInputType =
+  | HTMLInputTextType
+  | 'button'
+  | 'checkbox'
+  | 'color'
+  | 'date'
+  | 'datetime-local'
+  | 'file'
+  | 'hidden'
+  | 'image'
+  | 'month'
+  | 'radio'
+  | 'range'
+  | 'reset'
+  | 'submit'
+  | 'time'
+  | 'week';
+
+export type HTMLInputTextType =
+  | 'text'
+  | 'password'
+  | 'email'
+  | 'url'
+  | 'tel'
+  | 'search'
+  | 'number';
 
 const TextInput: FComponent<AriaTextFieldProps, HTMLInputElement> = (
-  { children, autoComplete = "off", ...ariaTextInputProps },
-  ref,
+  { children, autoComplete = 'off', ...ariaTextInputProps },
+  ref
 ) => {
   const fwRef = useObjectRef(ref);
+  if (!ariaTextInputProps.type) {
+    ariaTextInputProps.type = 'text';
+  }
+  if (!ariaTextInputProps.id) {
+    ariaTextInputProps.id = ariaTextInputProps.name;
+  }
 
   const { inputProps, descriptionProps, errorMessageProps, labelProps } =
     useTextField(ariaTextInputProps, fwRef);
-  console.log({ labelProps });
   return (
-    <>
+    <div>
       <label {...labelProps} className="block text-xs uppercase text-gray-300">
         {ariaTextInputProps.label}
       </label>
@@ -29,11 +61,11 @@ const TextInput: FComponent<AriaTextFieldProps, HTMLInputElement> = (
         </div>
       )}
       {ariaTextInputProps.errorMessage && (
-        <div {...errorMessageProps} style={{ color: "red", fontSize: 12 }}>
+        <div {...errorMessageProps} style={{ color: 'red', fontSize: 12 }}>
           {ariaTextInputProps.errorMessage}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

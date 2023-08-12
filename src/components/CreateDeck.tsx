@@ -1,17 +1,15 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { FComponent } from "@/types/common";
-import { IconButton } from "./Button";
-import { PlusIcon } from "./Icons";
-import { Modal } from "./Modal";
-import { CreateDeckForm } from "./CreateDeckForm";
+import * as React from 'react';
+import { FComponent } from '@/types/common';
+import { IconButton } from './Button';
+import { PlusIcon } from './Icons';
+import { Modal } from './Modal';
+import { CreateDeckForm } from './CreateDeckForm';
 
 export const CreateDeck: FComponent<{}> = ({}) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const toggle = () => setIsOpen(!isOpen);
-
-  console.log({ isOpen });
 
   return (
     <>
@@ -29,7 +27,12 @@ export const CreateDeck: FComponent<{}> = ({}) => {
         isTitleHidden={true}
         isDescriptionHidden={true}
       >
-        <CreateDeckForm onClose={toggle} />
+        <CreateDeckForm
+          onClose={(id: number) => {
+            toggle();
+            window.location.href = `/decks/${id}`;
+          }}
+        />
       </Modal>
     </>
   );
