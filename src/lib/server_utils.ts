@@ -1,21 +1,21 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Session, getServerSession } from "next-auth";
-import prisma from "@/lib/prisma";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
-export const readSession = async () => {
-  const session = await getServerSession(authOptions);
-  console.dir({ readsession: session });
-  if (!session || !session.user || !session.user.email) {
-    return null;
-  }
+// export const readSession = async () => {
+//   const session = await getServerSession(authOptions);
+//   if (!session || !session.user || !session.user.email) {
+//     return null;
+//   }
 
-  return {
-    id: session.user.id,
-    email: session.user.email,
-    name: session.user.name,
-    isAdmin: session.user.isAdmin,
-  };
-};
+//   return {
+//     id: session.user.id,
+//     email: session.user.email,
+//     name: session.user.name,
+//     isAdmin: session.user.isAdmin
+//   };
+// };
+
+export const getSupabase = () => createServerComponentClient({ cookies });
 
 // export const getCurrentUser = async () => {
 //   const session = await readSession();

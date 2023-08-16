@@ -1,14 +1,18 @@
-import { readSession } from "@/lib/server_utils";
-import { getServerSession } from "next-auth/next";
-import Link from "next/link";
+import { AFComponent } from '@/types/common';
+import { User } from '@supabase/supabase-js';
+import Link from 'next/link';
+import { Button } from './forms/Button';
+import { getSupabase } from '@/lib/server_utils';
+import { Logout } from './Logout';
 
-const Header = async () => {
-  const session = await readSession();
-  console.log({ headersession: session });
+const Header: AFComponent<{ user: User | null }> = async ({ user }) => {
   return (
-    <header className="flex w-full px-5 py-4">
-      {session ? (
-        <div className="ml-auto">{session.email}</div>
+    <header className="isolate z-20 flex w-full gap-5 px-5 py-4">
+      {user ? (
+        <>
+          <div className="ml-auto">{user.email}</div>
+          <Logout />
+        </>
       ) : (
         <Link href="/login">Login</Link>
       )}

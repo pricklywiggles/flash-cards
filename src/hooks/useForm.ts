@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Schema, validate } from 'tiny-validation';
 import { useSafeState } from './useSafeState';
+import { useAsync } from './useAsync';
 
 type InputTarget = EventTarget & HTMLInputElement;
 
@@ -9,16 +10,15 @@ export interface CustomTarget {
   type?: string;
   value: unknown;
 }
+
 type Target = InputTarget | CustomTarget;
 
-export type ChangeEvent = {
-  target: {
-    name: string;
-    type?: string;
-    value: unknown;
-  };
-  persist?: undefined;
+export type SimulatedChangeEvent<T extends Target> = {
+  target: T;
+  persist: undefined;
 };
+
+export type ChangeEvent = SimulatedChangeEvent<CustomTarget>;
 
 type FormState<T> = {
   values: T;
@@ -116,11 +116,16 @@ const useForm = <T extends Record<string, unknown>, S = unknown>({
   initialValues,
   disabledOverride = false
 }: UseFormProps<T, S>) => {
+  const wrappedReducer = React.useCallback(
+    (state: FormState<T>, action: Action<T>) => reducer(state, action),
+    []
+  );
   const [state, dispatch] = React.useReducer(
-    reducer<T>,
+    wrappedReducer,
     getFormState(initialValues)
   );
   const [isSubmitting, setIsSubmitting] = useSafeState(false);
+  const submission = useAsync<S>();
 
   React.useEffect(() => {
     validate(stableSchema, state.values).fold(setErrors(dispatch), () =>
@@ -135,24 +140,39 @@ const useForm = <T extends Record<string, unknown>, S = unknown>({
     if (event) event.preventDefault();
     setIsSubmitting(true);
     if (Object.keys(state.errors).length == 0) {
-      return onSubmit(state.values, ...args).finally(() => {
-        setIsSubmitting(false);
-      });
+      return submission
+        .run(onSubmit(state.values, ...args))
+        .catch((e) => {
+          if (e instanceof Error) {
+            console.error('unexpected error type', typeof e, e);
+            setErrors(dispatch)({ base: [e.message] });
+          } else {
+            console.error('unexpected error type', typeof e, e);
+          }
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
     } else {
       setIsSubmitting(false);
       return null;
     }
   };
 
+  // useful for applications that use react-aria
+  const handleChange = curry((fieldName: string, value: string) =>
+    changeValue(dispatch, {
+      name: fieldName,
+      type: 'input',
+      value: value
+    })
+  );
+
   const handleFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement> | ChangeEvent | Target
+    event: React.ChangeEvent<HTMLInputElement> | ChangeEvent
   ) => {
-    if ('target' in event) {
-      event.persist?.();
-      changeValue(dispatch, event.target);
-    } else {
-      changeValue(dispatch, event);
-    }
+    event.persist?.();
+    changeValue(dispatch, event.target);
   };
 
   const reset = (values = initialValues) => {
@@ -168,6 +188,7 @@ const useForm = <T extends Record<string, unknown>, S = unknown>({
 
   return {
     handleFieldChange,
+    handleChange,
     handleSubmit,
     isSubmitting,
     isFieldVisited,
@@ -175,9 +196,28 @@ const useForm = <T extends Record<string, unknown>, S = unknown>({
     isDisabled,
     setValues: setValues<T>(dispatch),
     setErrors: setErrors<T>(dispatch),
-    reset
+    resetForm: reset,
+    ...submission
   };
 };
 
-export { useForm };
+const createChangeEvent = <T extends Target>(
+  target: T
+): SimulatedChangeEvent<T> => ({
+  persist: undefined,
+  target
+});
+
+const curry = <F extends (...args: any[]) => any>(
+  fn: F
+): ((...args: any[]) => any) => {
+  return (...args: any[]) => {
+    if (fn.length <= args.length) {
+      return fn(...args);
+    }
+    return curry(fn.bind(null, ...args));
+  };
+};
+
+export { useForm, createChangeEvent };
 export * from 'tiny-validation';

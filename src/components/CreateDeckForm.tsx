@@ -1,5 +1,5 @@
 'use client';
-import { useForm } from 'controlled-form-hook';
+import { useForm } from '@/hooks/useForm';
 import { Button } from './forms/Button';
 import {
   isPresent,
@@ -9,7 +9,7 @@ import {
 import { FComponent } from '@/types/common';
 import TextInput from './forms/TextInput';
 
-export const CreateDeckForm: FComponent<{ onClose?: (id: number) => void }> = ({
+export const CreateDeckForm: FComponent<{ onClose?: (id: string) => void }> = ({
   onClose
 }) => {
   const submit = async ({ name }: { name: string }) => {
@@ -22,12 +22,12 @@ export const CreateDeckForm: FComponent<{ onClose?: (id: number) => void }> = ({
         name: name
       })
     }).then(async (res) => {
-      const deck = await res.json();
+      const { data: deck, error } = await res.json();
+      console.log({ deck });
       if (res.status === 200) {
         onClose?.(deck.id);
       } else {
-        const { error } = await res.json();
-        console.error(error);
+        console.error({ error: deck });
       }
     });
   };

@@ -1,38 +1,54 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from './forms/Button';
 import TextInput from './forms/TextInput';
-import { Validators, useForm } from 'controlled-form-hook';
+import { Validators, useForm } from '@/hooks/useForm';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 const { isEmail, isPresent, minChars } = Validators;
 
 export default function SignupForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
-  const submit = ({ email, password }: { email: string; password: string }) =>
-    fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
-    }).then(async (res) => {
-      if (res.status === 200) {
-        setTimeout(() => {
-          router.push('/login');
-        }, 2000);
-      } else {
-        const { error } = await res.json();
-        console.error(error);
+  const submit = async ({
+    email,
+    password
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${location.origin}/api/auth/callback`
       }
     });
+    router.refresh();
+  };
+  // fetch('/api/auth/register', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify({
+  //     email: email,
+  //     password: password
+  //   })
+  // }).then(async (res) => {
+  //   if (res.status === 200) {
+  //     setTimeout(() => {
+  //       router.push('/login');
+  //     }, 2000);
+  //   } else {
+  //     const { error } = await res.json();
+  //     console.error(error);
+  //   }
+  // });
 
   const {
     handleSubmit,
@@ -65,13 +81,8 @@ export default function SignupForm() {
         />
       </div>
       <div>
-        <label
-          htmlFor="password"
-          className="block text-xs uppercase text-gray-300"
-        >
-          Password
-        </label>
         <TextInput
+          label="Password"
           name="password"
           type="password"
           value={values.password}

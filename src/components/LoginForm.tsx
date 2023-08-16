@@ -1,36 +1,41 @@
 'use client';
 
 import { FormEventHandler, useState } from 'react';
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Validators } from 'tiny-validation';
 import { Button } from './forms/Button';
 import TextInput from './forms/TextInput';
-import { useForm } from 'controlled-form-hook';
+import { useForm } from '@/hooks/useForm';
+import { getSupabase } from '@/lib/client_utils';
+import { AuthError } from '@supabase/supabase-js';
 const { isEmail, isPresent, minChars } = Validators;
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const supabase = getSupabase();
   const router = useRouter();
 
-  const submit = ({ email, password }: { email: string; password: string }) =>
-    signIn('credentials', {
-      redirect: false,
-      email: email,
-      password: password
-    }).then((res) => {
-      if (res?.error) {
-        console.error(res.error);
-      } else {
-        router.refresh();
-        // get the callbackUrl param from the current url
-        const callbackUrl = new URL(window.location.href).searchParams.get(
-          'callbackUrl'
-        );
-        router.push(callbackUrl || '/');
-      }
+  const submit = async ({
+    email,
+    password
+  }: {
+    email: string;
+    password: string;
+  }) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
     });
+    console.log({ data, error });
+    if (error) {
+      throw error;
+    }
+    if (!data.user) {
+      throw new AuthError('Could not sign in with those credentials');
+    }
+    location.href = '/';
+  };
 
   const {
     handleSubmit,
@@ -38,7 +43,8 @@ export default function LoginForm() {
     isSubmitting,
     isDisabled,
     values,
-    errors
+    errors,
+    error
   } = useForm({
     onSubmit: submit,
     stableSchema,
@@ -74,6 +80,9 @@ export default function LoginForm() {
           className="mt-1 block w-full appearance-none rounded-md border border-gray-600 bg-black px-3 py-2 text-gray-300 placeholder-gray-500 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
         />
       </div>
+      {errors.base ? (
+        <div className="text-xs text-red-400">⚠️&nbsp;&nbsp;{errors.base}</div>
+      ) : null}
       <Button type="submit" isDisabled={isDisabled} isSubmitting={isSubmitting}>
         Sign In
       </Button>

@@ -9,8 +9,11 @@
     "start": "next start",
     "lint": "next lint",
     "migrate": "dotenv -e .env.development.local -- npx prisma db push --schema src/prisma/schema.prisma",
-    "db:seed": "prisma db seed",
-    "db:reset": "dotenv -e .env.development.local -- npx prisma db push --force-reset"
+    "db:seed": "dotenv -e .env.development.local prisma db seed",
+    "db:reset": "dotenv -e .env.development.local -- npx prisma db push --force-reset",
+    "db:push": "dotenv -e .env.development.local prisma db push",
+    "db:pull": "dotenv -e .env.development.local prisma db pull",
+    "db:generate": "dotenv -e .env.development.local prisma generate "
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
@@ -20,6 +23,8 @@
     "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@prisma/client": "^5.0.0",
+    "@supabase/auth-helpers-nextjs": "^0.7.4",
+    "@supabase/supabase-js": "^2.32.0",
     "@trpc/client": "^10.34.0",
     "@trpc/server": "^10.34.0",
     "@types/react": "18.2.15",
@@ -36,7 +41,6 @@
     "hashids": "^2.3.0",
     "immer": "^10.0.2",
     "next": "13.4.10",
-    "next-auth": "^4.23.0",
     "postcss": "8.4.26",
     "react": "18.2.0",
     "react-aria": "^3.26.0",
@@ -48,6 +52,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "encoding": "^0.1.13",
     "prettier": "^3.0.1",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "prisma": "^5.0.0",

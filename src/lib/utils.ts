@@ -1,4 +1,4 @@
-import Hashids from "hashids";
+import Hashids from 'hashids';
 export type NumberLike = bigint | number;
 const hashids = new Hashids();
 
@@ -7,7 +7,7 @@ type DeepPartial<T> = {
 };
 
 function isObject<T>(item: T): item is T extends object ? T : never {
-  return item && typeof item === "object" && !Array.isArray(item);
+  return item && typeof item === 'object' && !Array.isArray(item);
 }
 
 export const deepMerge = <T>(target: T, source: DeepPartial<T>): T => {
@@ -37,15 +37,8 @@ export const log = (...args: any[]) => {
   console.log(JSON.stringify(args, null, 2));
 };
 
-export const encodeId = hashids.encode.bind(hashids);
-export const decodeUuid = (uuid: string) => {
-  const id = hashids.decode(uuid)[0];
-  if (typeof id === "number") {
-    return id;
-  }
-  if (typeof id === "bigint") {
-    console.log("Found a bigint id", { id });
-    return Number(id);
-  }
-  throw new Error(`Invalid id: ${id}`);
+export const decodeJwt = (token: string) => {
+  return token
+    ? Buffer.from(token.split('.')[1], 'base64').toString()
+    : undefined;
 };

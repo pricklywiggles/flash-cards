@@ -1,12 +1,12 @@
-import Link from "next/link";
-import prisma from "@/lib/prisma";
-import { CreateDeck } from "@/components/CreateDeck";
+import Link from 'next/link';
+import prisma from '@/lib/prisma';
+import { CreateDeck } from '@/components/CreateDeck';
 
 export default async function Page() {
   const decks = await prisma.deck.findMany({
     orderBy: {
-      createdAt: "desc",
-    },
+      createdAt: 'desc'
+    }
   });
 
   return (

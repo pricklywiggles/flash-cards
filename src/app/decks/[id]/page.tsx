@@ -6,7 +6,7 @@ import { EditDeckDetails } from '@/components/EditDeckDetails';
 
 export default async function Deck({ params }: { params: { id: string } }) {
   const data = await prisma.deck.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: params.id },
     include: {
       cards: {
         orderBy: {
@@ -16,7 +16,8 @@ export default async function Deck({ params }: { params: { id: string } }) {
       author: {
         select: {
           id: true,
-          name: true
+          name: true,
+          email: true
         }
       }
     }
@@ -28,7 +29,7 @@ export default async function Deck({ params }: { params: { id: string } }) {
     <div className="relative">
       <div>{data.name}</div>
       <div>{data.description}</div>
-      <div>Created by {data.author.name}</div>
+      <div>Created by {data.author.email}</div>
       <div>{data.createdAt.toLocaleString()}</div>
       <EditDeckDetails className="absolute right-0 top-0" {...data} />
       <div className="border-t-[1px] border-gray-600 pb-5" />

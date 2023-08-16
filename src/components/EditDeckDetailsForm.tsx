@@ -1,5 +1,5 @@
 'use client';
-import { useForm } from 'controlled-form-hook';
+import { useForm } from '@/hooks/useForm';
 import { Button } from './forms/Button';
 import {
   isPresent,
@@ -8,11 +8,10 @@ import {
 } from 'tiny-validation/build/main/lib/validators';
 import { FComponent, Nullable } from '@/types/common';
 import TextInput from './forms/TextInput';
-import { decodeUuid } from '@/lib/utils';
 import { isOptionalUrl, optionalMinChars } from '@/lib/validators';
 
 export type DeckDetails = {
-  id: number;
+  id: string;
   name: string;
   description: Nullable<string>;
   imageUrl: Nullable<string>;

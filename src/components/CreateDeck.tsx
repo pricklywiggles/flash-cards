@@ -28,7 +28,7 @@ export const CreateDeck: FComponent<{}> = ({}) => {
         isDescriptionHidden={true}
       >
         <CreateDeckForm
-          onClose={(id: number) => {
+          onClose={(id: string) => {
             toggle();
             window.location.href = `/decks/${id}`;
           }}
