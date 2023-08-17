@@ -37,8 +37,6 @@ export const log = (...args: any[]) => {
   console.log(JSON.stringify(args, null, 2));
 };
 
-export const decodeJwt = (token: string) => {
-  return token
-    ? Buffer.from(token.split('.')[1], 'base64').toString()
-    : undefined;
+export const decodeJwt = (token: string | null) => {
+  return token ? Buffer.from(token.split('.')[1], 'base64').toString() : null;
 };

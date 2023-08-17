@@ -22,12 +22,14 @@ export const CreateDeckForm: FComponent<{ onClose?: (id: string) => void }> = ({
         name: name
       })
     }).then(async (res) => {
-      const { data: deck, error } = await res.json();
-      console.log({ deck });
-      if (res.status === 200) {
-        onClose?.(deck.id);
+      const { data, error } = await res.json();
+      console.log({ data, error });
+      if (res.ok) {
+        onClose?.(data.id);
+        return Promise.resolve(data);
       } else {
-        console.error({ error: deck });
+        console.error({ error });
+        return Promise.reject(error);
       }
     });
   };
@@ -60,7 +62,7 @@ export const CreateDeckForm: FComponent<{ onClose?: (id: string) => void }> = ({
           placeholder="Useful math formulas"
           className="mt-1 block w-full appearance-none rounded-md border border-gray-600 bg-black px-3 py-2 text-gray-300 placeholder-gray-500 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
         />
-
+        <div className="text-sm text-red-500">{errors.base}</div>
         <Button type="submit" isSubmitting={isSubmitting}>
           Create
         </Button>

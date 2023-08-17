@@ -110,7 +110,7 @@ type UseFormProps<T, S> = {
   disabledOverride?: boolean;
 };
 
-const useForm = <T extends Record<string, unknown>, S = unknown>({
+const useForm = <T extends Record<string, unknown>, S = unknown, E = string>({
   onSubmit,
   stableSchema,
   initialValues,
@@ -125,7 +125,7 @@ const useForm = <T extends Record<string, unknown>, S = unknown>({
     getFormState(initialValues)
   );
   const [isSubmitting, setIsSubmitting] = useSafeState(false);
-  const submission = useAsync<S>();
+  const submission = useAsync<S, E>();
 
   React.useEffect(() => {
     validate(stableSchema, state.values).fold(setErrors(dispatch), () =>
@@ -144,10 +144,12 @@ const useForm = <T extends Record<string, unknown>, S = unknown>({
         .run(onSubmit(state.values, ...args))
         .catch((e) => {
           if (e instanceof Error) {
-            console.error('unexpected error type', typeof e, e);
             setErrors(dispatch)({ base: [e.message] });
+          } else if (typeof e === 'string') {
+            setErrors(dispatch)({ base: [e] });
           } else {
             console.error('unexpected error type', typeof e, e);
+            setErrors(dispatch)({ base: ['An unknown error occurred'] });
           }
         })
         .finally(() => {

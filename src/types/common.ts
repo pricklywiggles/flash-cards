@@ -14,3 +14,8 @@ export type AFComponent<T = Record<string, unknown>, S = unknown> = (
 ) => Promise<JSX.Element>;
 
 export type Nullable<T> = T | null;
+
+export type ApiResult<Result> = {
+  data: Result | null;
+  error: string | null;
+};

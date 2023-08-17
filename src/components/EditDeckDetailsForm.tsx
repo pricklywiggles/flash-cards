@@ -101,6 +101,8 @@ export const EditDeckDetailsForm: FComponent<
           placeholder="https://example.com/image.png"
           className="mt-1 block w-full appearance-none rounded-md border border-gray-600 bg-black px-3 py-2 text-gray-300 placeholder-gray-500 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
         />
+        <div className="text-sm text-red-500">{errors.base}</div>
+
         <Button type="submit" isDisabled={isDisabled}>
           {isSubmitting ? 'Updating...' : 'Update'}
         </Button>

@@ -1,36 +1,43 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import { cookies } from 'next/headers';
-
-// export const readSession = async () => {
-//   const session = await getServerSession(authOptions);
-//   if (!session || !session.user || !session.user.email) {
-//     return null;
-//   }
-
-//   return {
-//     id: session.user.id,
-//     email: session.user.email,
-//     name: session.user.name,
-//     isAdmin: session.user.isAdmin
-//   };
-// };
+import { decodeJwt } from './utils';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 export const getSupabase = () => createServerComponentClient({ cookies });
 
-// export const getCurrentUser = async () => {
-//   const session = await readSession();
+export const getAccessToken = (cookies: ReadonlyRequestCookies) => {
+  const cookie = cookies.get(
+    `sb-${process.env.SUPABASE_PROJECT_ID}-auth-token`
+  );
+  if (!cookie) {
+    return null;
+  }
+  return JSON.parse(cookie.value)[0];
+};
 
-//   if (session === null) {
-//     return null;
-//   }
+export const getCurrentUser = ({
+  cookies,
+  accessToken
+}: {
+  cookies?: ReadonlyRequestCookies;
+  accessToken?: string;
+}) => {
+  if (cookies) {
+    accessToken = getAccessToken(cookies);
+  }
+  if (!accessToken) {
+    return null;
+  }
+  const claims = decodeJwt(accessToken);
+  if (!claims) {
+    return null;
+  }
+  const claimsObj = JSON.parse(claims);
 
-//   const user = await prisma.user.findUnique({
-//     where: {
-//       email: session.email,
-//     },
-//   });
-//   if (!user) {
-//     throw new Error("Current user not found");
-//   }
-//   return user;
-// };
+  return {
+    isAuthenticated: claimsObj.aud === 'authenticated',
+    id: claimsObj.sub,
+    email: claimsObj.email
+  };
+};

@@ -1,17 +1,30 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextRequest, NextResponse } from 'next/server';
-// import { decodeJwt } from './lib/server_utils';
+import { getCurrentUser } from './lib/server_utils';
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+  let res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
-  await supabase.auth.getSession();
-  // const accessToken = session.data.session?.access_token;
-  // let claims;
-  // if (accessToken) {
-  //   claims = decodeJwt(accessToken);
-  // }
-  // console.log({ accessToken, claims });
-  // req.headers.set('x-sb-token', claims || 'none');
+  const session = await supabase.auth.getSession();
+
+  if (req.nextUrl.pathname.startsWith('/api/decks')) {
+    const currentUser = getCurrentUser({
+      accessToken: session.data.session?.access_token
+    });
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set('x-flash-id', currentUser?.id || '');
+    res = NextResponse.next({
+      request: {
+        headers: requestHeaders
+      }
+    });
+
+    if (!currentUser || !currentUser.isAuthenticated) {
+      return NextResponse.json(
+        { error: "I don't even know who you are, log in first." },
+        { status: 401 }
+      );
+    }
+  }
   return res;
 }
