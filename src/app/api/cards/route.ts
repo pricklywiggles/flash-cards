@@ -1,21 +1,23 @@
-import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { getErrorResponse, getUserIdFromCookies } from '@/lib/route_utils';
+import { cookies } from 'next/headers';
+import { getRlsClient } from '@/lib/prisma';
 
 export async function POST(req: Request) {
-  const card = await req.json();
+  const cardDetails = await req.json();
 
   try {
     const userId = getUserIdFromCookies(req.headers);
+    const prisma = getRlsClient({ cookies });
 
-    const deck = await prisma.card.create({
+    const card = await prisma.card.create({
       data: {
-        ...card,
+        ...cardDetails,
         authorId: userId
       }
     });
 
-    return NextResponse.json({ data: deck, error: null });
+    return NextResponse.json({ data: card, error: null });
   } catch (e) {
     const { data, error, status } = getErrorResponse(e);
     return NextResponse.json({ data, error }, { status });

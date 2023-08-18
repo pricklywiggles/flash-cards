@@ -1,12 +1,14 @@
-import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { getUserIdFromHeaders } from '@/lib/server_utils';
 import { getErrorResponse } from '@/lib/route_utils';
+import { getRlsClient } from '@/lib/prisma';
+import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
   const { name } = await req.json();
 
   try {
+    const prisma = getRlsClient({ cookies });
     const userId = getUserIdFromHeaders(req.headers);
 
     const deck = await prisma.deck.create({

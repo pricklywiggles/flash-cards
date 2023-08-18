@@ -41,7 +41,8 @@ export const CreateCardForm: FComponent<{
     isSubmitting,
     isDisabled,
     values,
-    errors
+    errors,
+    isError
   } = useForm({
     onSubmit: submit,
     stableSchema,
@@ -53,11 +54,11 @@ export const CreateCardForm: FComponent<{
 
   return (
     <div className="">
-      <div>What is the topic of this flash deck?</div>
-      <form className="grid gap-2" onSubmit={handleSubmit}>
+      <div>Type your card contents</div>
+      <form className="grid min-w-[30rem] gap-4 pt-5" onSubmit={handleSubmit}>
         <TextInput
           name="front"
-          aria-labelledby="cardfront-label"
+          label="Front"
           data-1p-ignore
           value={values.front}
           onChange={handleChange('front')}
@@ -66,14 +67,16 @@ export const CreateCardForm: FComponent<{
         />
         <TextInput
           name="back"
-          aria-labelledby="cardfback-label"
+          label="Back"
           data-1p-ignore
           value={values.back}
           onChange={handleChange('back')}
           placeholder="twenty two"
           className="mt-1 block w-full appearance-none rounded-md border border-gray-600 bg-black px-3 py-2 text-gray-300 placeholder-gray-500 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
         />
-        <div className="text-sm text-red-500">{errors.base}</div>
+        {isError ? (
+          <div className="text-sm text-red-500">{errors.base}</div>
+        ) : null}
         <Button type="submit" isSubmitting={isSubmitting}>
           Create
         </Button>
