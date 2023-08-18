@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { getSupabase } from '@/lib/server_utils';
 import { cookies } from 'next/headers';
+import clsx from 'clsx';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,8 +25,8 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   return (
-    <html className="bg-stratos-900" lang="en">
-      <body className={inter.className}>
+    <html className="h-full bg-stratos-900" lang="en">
+      <body className={clsx(inter.className, 'flex h-full flex-col')}>
         <Header user={user} />
         <div
           className="absolute inset-x-0 -top-[5%] -z-50 transform-gpu overflow-hidden blur-[90px] sm:-top-[20%] md:-top-[30%] lg:-top-[40%] xl:-top-[70%] 2xl:-top-[90%]"
@@ -39,7 +40,7 @@ export default async function RootLayout({
             }}
           />
         </div>
-        <main className="isolate">{children}</main>
+        <main className="isolate flex h-full flex-col">{children}</main>
       </body>
     </html>
   );

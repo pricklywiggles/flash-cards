@@ -54,13 +54,13 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col space-y-4  px-4 py-8 sm:px-16"
+      className="flex grow flex-col gap-4  px-8 py-8 sm:px-16"
     >
       <div>
         <TextInput
           name="email"
           type="email"
-          label="Email Address"
+          label="✉️ &nbsp;Email Address"
           value={values.email}
           onChange={handleChange('email')}
           isRequired
@@ -73,7 +73,7 @@ export default function LoginForm() {
         <TextInput
           name="password"
           type="password"
-          label="password"
+          label="🔑 &nbsp;password"
           value={values.password}
           onChange={handleChange('password')}
           isRequired
@@ -83,10 +83,15 @@ export default function LoginForm() {
       {errors.base ? (
         <div className="text-xs text-red-400">⚠️&nbsp;&nbsp;{errors.base}</div>
       ) : null}
-      <Button type="submit" isDisabled={isDisabled} isSubmitting={isSubmitting}>
+      <Button
+        className="mt-auto"
+        type="submit"
+        isDisabled={isDisabled}
+        isSubmitting={isSubmitting}
+      >
         Sign In
       </Button>
-      <p className="text-center text-sm text-gray-400">
+      <p className=" text-center text-sm text-gray-400">
         Don&apos;t have an account?{' '}
         <Link href="/register" className="font-semibold text-gray-200">
           Sign up
