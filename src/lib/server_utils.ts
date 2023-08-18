@@ -6,12 +6,15 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 export const getSupabase = () => createServerComponentClient({ cookies });
 
-export const getAccessToken = (cookies: ReadonlyRequestCookies) => {
+export const getAccessToken = (cookies?: ReadonlyRequestCookies) => {
+  if (!cookies) {
+    return undefined;
+  }
   const cookie = cookies.get(
     `sb-${process.env.SUPABASE_PROJECT_ID}-auth-token`
   );
   if (!cookie) {
-    return null;
+    return undefined;
   }
   return JSON.parse(cookie.value)[0];
 };
@@ -40,4 +43,12 @@ export const getCurrentUser = ({
     id: claimsObj.sub,
     email: claimsObj.email
   };
+};
+
+export const getUserIdFromHeaders = (headers: Headers) => {
+  const userId = headers.get('x-flash-id');
+  if (!userId) {
+    throw new Error('User ID not found in headers');
+  }
+  return userId;
 };

@@ -9,6 +9,7 @@ import {
 import { FComponent, Nullable } from '@/types/common';
 import TextInput from './forms/TextInput';
 import { isOptionalUrl, optionalMinChars } from '@/lib/validators';
+import { Deck } from '@prisma/client';
 
 export type DeckDetails = {
   id: string;
@@ -19,7 +20,7 @@ export type DeckDetails = {
 
 export const EditDeckDetailsForm: FComponent<
   {
-    onSuccess?: () => void;
+    onSuccess?: (deck: Deck) => void;
   } & DeckDetails
 > = ({ id, name, description, imageUrl, onSuccess }) => {
   const submit = async ({
@@ -31,7 +32,6 @@ export const EditDeckDetailsForm: FComponent<
     description: string;
     imageUrl: string;
   }) => {
-    console.log('WTF');
     return fetch(`/api/decks/${id}`, {
       method: 'PUT',
       headers: {
@@ -45,10 +45,12 @@ export const EditDeckDetailsForm: FComponent<
       })
     }).then(async (res) => {
       if (res.status === 200) {
-        onSuccess?.();
+        const { data: deck } = await res.json();
+        console.log({ deck });
+        onSuccess?.(deck);
       } else {
         const { error } = await res.json();
-        console.error(error);
+        console.error({ error });
         throw new Error(error);
       }
     });
