@@ -1,6 +1,7 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 export const getErrorResponse = (error: unknown, defaultMessage = '') => {
+  console.log(error);
   let message = defaultMessage || "Oops, the server ain't serving";
   let status = 500;
 
@@ -14,4 +15,12 @@ export const getErrorResponse = (error: unknown, defaultMessage = '') => {
   }
 
   return { data: null, error: message, status };
+};
+
+export const getUserIdFromCookies = (headers: Headers) => {
+  const userId = headers.get('x-flash-id');
+  if (!userId) {
+    throw new Error('User ID not found in headers');
+  }
+  return userId;
 };

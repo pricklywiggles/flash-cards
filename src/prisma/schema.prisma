@@ -15,8 +15,8 @@ datasource db {
 model Card {
   createdAt     DateTime  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
   publishedAt   DateTime? @db.Timestamptz(6)
-  front         String?
-  back          String?
+  front         String
+  back          String
   authorId      String    @db.Uuid
   position      Int       @db.SmallInt
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid

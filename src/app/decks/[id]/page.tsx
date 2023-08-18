@@ -3,9 +3,11 @@ import { Deck, Card } from '@prisma/client';
 import { FComponent } from '@/types/common';
 import { IconButton } from '@/components/Button';
 import { EditDeckDetails } from '@/components/EditDeckDetails';
+import { CreateCard } from '@/components/CreateCard';
+import { EditCardDetails } from '@/components/EditCardDetails';
 
 export default async function Deck({ params }: { params: { id: string } }) {
-  const data = await prisma.deck.findUnique({
+  const deck = await prisma.deck.findUnique({
     where: { id: params.id },
     include: {
       cards: {
@@ -23,19 +25,25 @@ export default async function Deck({ params }: { params: { id: string } }) {
     }
   });
 
-  if (!data) return <div>Deck not found</div>;
+  if (!deck) return <div>Deck not found</div>;
 
   return (
     <div className="relative">
-      <div>{data.name}</div>
-      <div>{data.description}</div>
-      <div>Created by {data.author.email}</div>
-      <div>{data.createdAt.toLocaleString()}</div>
-      <EditDeckDetails className="absolute right-0 top-0" {...data} />
+      <div>{deck.name}</div>
+      <div>{deck.description}</div>
+      <div>Created by {deck.author.email}</div>
+      <div>{deck.createdAt.toLocaleString()}</div>
+      <EditDeckDetails className="absolute right-0 top-0" {...deck} />
       <div className="border-t-[1px] border-gray-600 pb-5" />
-      {data.cards.map((card) => (
-        <Card key={card.id} card={card} />
-      ))}
+      <div className="relative">
+        <CreateCard deckId={deck.id} position={deck.cards.length} />
+        {deck.cards.map((card) => (
+          <div key={card.id} className="relative flex justify-normal">
+            <Card card={card} />
+            <EditCardDetails className="pl-5" {...card} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

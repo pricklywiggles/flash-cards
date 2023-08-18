@@ -7,7 +7,10 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient({ req, res });
   const session = await supabase.auth.getSession();
 
-  if (req.nextUrl.pathname.startsWith('/api/decks')) {
+  if (
+    req.nextUrl.pathname.startsWith('/api/decks') ||
+    req.nextUrl.pathname.startsWith('/api/cards')
+  ) {
     const currentUser = getCurrentUser({
       accessToken: session.data.session?.access_token
     });
