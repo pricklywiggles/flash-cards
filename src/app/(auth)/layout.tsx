@@ -23,20 +23,24 @@ export default async function RootLayout({
       <body
         className={clsx(inter.className, 'flex h-full flex-col text-gray-200')}
       >
-        <div
-          className="absolute inset-x-0 -top-[5%] -z-50 transform-gpu overflow-hidden blur-[90px] sm:-top-[20%] md:-top-[30%] lg:-top-[40%] xl:-top-[70%] 2xl:-top-[90%]"
-          aria-hidden="true"
-        >
-          <div
-            className="relative left-[calc(50%-11rem)] aspect-[80/120] w-full -translate-x-1/2 translate-y-1/2 rotate-[40deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-80  sm:opacity-70 md:opacity-50 lg:opacity-30"
-            style={{
-              clipPath:
-                'polygon(7% 8%, 32% 2%, 30% 19%, 56% 8%, 58% 31%, 82% 20%, 22% 52%, 98% 24%, 81% 54%, 52% 99%, 71% 5%)'
-            }}
-          />
-        </div>
+        {/* <Backdrop /> */}
         <main className="isolate flex h-full flex-col">{children}</main>
       </body>
     </html>
   );
 }
+
+const Backdrop = () => (
+  <div
+    className="absolute inset-x-0 -z-50 transform-gpu overflow-hidden blur-[90px]"
+    aria-hidden="true"
+  >
+    <div
+      className="relative left-[calc(50%-11rem)] aspect-[1/1] w-full -translate-x-1/2 translate-y-1/2 rotate-[40deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-80  sm:opacity-70 md:opacity-50 lg:opacity-30"
+      style={{
+        clipPath:
+          'polygon(7% 8%, 32% 2%, 30% 19%, 56% 8%, 58% 31%, 82% 20%, 22% 52%, 98% 24%, 81% 54%, 52% 99%, 71% 5%)'
+      }}
+    />
+  </div>
+);

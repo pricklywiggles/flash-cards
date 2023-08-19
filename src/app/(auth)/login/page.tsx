@@ -2,10 +2,13 @@ import LoginForm from '@/components/LoginForm';
 import SlateCard from '@/components/SlateCard';
 import Image from 'next/image';
 import logo from '@/assets/flash_logo.png';
+import { FComponent } from '@/types/common';
+import { AuthPageContainer } from '../containers';
 
 export default function Login() {
   return (
-    <div className="flex h-full w-screen flex-col items-center justify-center ">
+    <AuthPageContainer>
+      {/* <div className="flex h-full w-screen flex-col items-center justify-center "> */}
       <Image
         className="my-16 h-20 w-20"
         alt="Flash decks logo"
@@ -21,6 +24,7 @@ export default function Login() {
         </div>
         <LoginForm />
       </SlateCard>
-    </div>
+      {/* </div> */}
+    </AuthPageContainer>
   );
 }
