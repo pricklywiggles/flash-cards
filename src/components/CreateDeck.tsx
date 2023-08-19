@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import { FComponent } from '@/types/common';
-import { IconButton } from './Button';
-import { PlusIcon } from './Icons';
-import { Modal } from './Modal';
+import { IconButton } from './common/Button';
+import { PlusIcon } from './common/Icons';
+import { Modal } from './common/Modal';
 import { CreateDeckForm } from './CreateDeckForm';
 
 export const CreateDeck: FComponent<{}> = ({}) => {

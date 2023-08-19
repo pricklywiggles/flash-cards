@@ -1,13 +1,13 @@
 'use client';
 import { useForm } from '@/hooks/useForm';
-import { Button } from './forms/Button';
+import { Button } from './common/forms/Button';
 import {
   isPresent,
   maxChars,
   minChars
 } from 'tiny-validation/build/main/lib/validators';
 import { FComponent, Nullable } from '@/types/common';
-import TextInput from './forms/TextInput';
+import TextInput from './common/forms/TextInput';
 import { isOptionalUrl, optionalMinChars } from '@/lib/validators';
 
 export type CardDetails = {

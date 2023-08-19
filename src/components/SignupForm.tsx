@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button } from './forms/Button';
-import TextInput from './forms/TextInput';
+import { Button } from './common/forms/Button';
+import TextInput from './common/forms/TextInput';
 import { Validators, useForm } from '@/hooks/useForm';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 const { isEmail, isPresent, minChars } = Validators;
@@ -21,14 +21,17 @@ export default function SignupForm() {
     email: string;
     password: string;
   }) => {
-    await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${location.origin}/api/auth/callback`
       }
     });
-    router.refresh();
+    console.log({ data, error });
+    if (error) {
+      throw error;
+    }
   };
   // fetch('/api/auth/register', {
   //   method: 'POST',
@@ -66,7 +69,7 @@ export default function SignupForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col space-y-4  px-4 py-8 sm:px-16"
+      className="flex grow flex-col gap-4 px-8 py-8 sm:px-16"
     >
       <div>
         <TextInput
@@ -90,7 +93,15 @@ export default function SignupForm() {
           className="mt-1 block w-full appearance-none rounded-md border border-gray-600 bg-black px-3 py-2 text-gray-300 placeholder-gray-500 shadow-sm focus:border-gray-200 focus:outline-none focus:ring-black sm:text-sm"
         />
       </div>
-      <Button type="submit" isDisabled={isDisabled} isSubmitting={isSubmitting}>
+      {errors.base ? (
+        <div className="text-xs text-red-400">⚠️&nbsp;&nbsp;{errors.base}</div>
+      ) : null}
+      <Button
+        className="mt-auto"
+        type="submit"
+        isDisabled={isDisabled}
+        isSubmitting={isSubmitting}
+      >
         Sign up
       </Button>
       <p className="text-center text-sm text-gray-400">

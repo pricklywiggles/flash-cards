@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import { FComponent } from '@/types/common';
-import { IconButton } from './Button';
-import { PencilIcon, PlusIcon } from './Icons';
-import { Modal } from './Modal';
+import { IconButton } from './common/Button';
+import { PencilIcon, PlusIcon } from './common/Icons';
+import { Modal } from './common/Modal';
 import { CardDetails, EditCardDetailsForm } from './EditCardDetailsForm';
 
 export const EditCardDetails: FComponent<CardDetails> = ({

@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { Deck, Card } from '@prisma/client';
 import { FComponent } from '@/types/common';
-import { IconButton } from '@/components/Button';
+import { IconButton } from '@/components/common/Button';
 import { EditDeckDetails } from '@/components/EditDeckDetails';
 import { CreateCard } from '@/components/CreateCard';
 import { EditCardDetails } from '@/components/EditCardDetails';
