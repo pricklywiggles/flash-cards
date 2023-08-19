@@ -73,7 +73,7 @@ export default function SignupForm() {
     >
       <div>
         <TextInput
-          label="Email"
+          label="✉️ &nbsp;Email Address"
           name="email"
           type="email"
           value={values.email}
@@ -85,7 +85,7 @@ export default function SignupForm() {
       </div>
       <div>
         <TextInput
-          label="Password"
+          label="🔑 &nbsp;password"
           name="password"
           type="password"
           value={values.password}

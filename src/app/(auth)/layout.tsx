@@ -23,7 +23,7 @@ export default async function RootLayout({
       <body
         className={clsx(inter.className, 'flex h-full flex-col text-gray-200')}
       >
-        {/* <Backdrop /> */}
+        <Backdrop />
         <main className="isolate flex h-full flex-col">{children}</main>
       </body>
     </html>
