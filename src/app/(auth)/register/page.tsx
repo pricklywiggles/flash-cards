@@ -4,10 +4,11 @@ import Link from 'next/link';
 import SignupForm from '@/components/SignupForm';
 import SlateCard from '@/components/SlateCard';
 import logo from '@/assets/flash_logo.png';
+import { AuthPageContainer } from '../containers';
 
 export default function Register() {
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center pt-4  ">
+    <AuthPageContainer>
       <div className="flex flex-col items-center justify-center gap-1 pb-10 sm:gap-2 sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
         <div className="">
           <span className="font-bold text-yellow-400">Create</span> flash decks
@@ -32,6 +33,6 @@ export default function Register() {
         </div>
         <SignupForm />
       </SlateCard>
-    </div>
+    </AuthPageContainer>
   );
 }
