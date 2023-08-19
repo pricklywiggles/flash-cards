@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  /* background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb)); */
+}
+
+.glass-window::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: linear-gradient(
+      45deg,
+      hsla(0, 0%, 0%, 30%),
+      hsla(0, 0%, 20%, 30%),
+      hsla(0, 0%, 100%, 40%)
+    )
+    border-box;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glare {
+  background: linear-gradient(
+    to bottom left,
+    hsla(0, 0%, 100%, 0.1),
+    hsla(0, 0%, 60%, 0.2),
+    hsla(0, 0%, 60%, 0.5)
+  ); /* Gradient from bottom left to top right */
+}
+
+.glare-slate {
+  background: linear-gradient(
+    to bottom left,
+    hsla(229, 84%, 90%, 0.1),
+    hsla(222, 47%, 65%, 0.2),
+    hsla(217, 41%, 59%, 0.5)
+  ); /* Gradient from bottom left to top right */
+}
+
+/*
+//rgb(30 41 59) slate-800
+hsla(217, 41%, 59%, 1);
+//rgb(15 23 42) slate-900
+hsla(222, 47%, 11%, 1);
+//rgb(2 6 23) slate-950
+hsla(229, 84%, 5%, 1)*/
