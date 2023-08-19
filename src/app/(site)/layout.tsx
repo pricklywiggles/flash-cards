@@ -3,7 +3,6 @@ import '@app/globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { getSupabase } from '@/lib/server_utils';
-import { cookies } from 'next/headers';
 import clsx from 'clsx';
 
 const inter = Inter({ subsets: ['latin'] });

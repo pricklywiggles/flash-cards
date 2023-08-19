@@ -1,10 +1,7 @@
-// import { AuthHeader } from '@/components/Header';
 import '@app/globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import clsx from 'clsx';
-import Image from 'next/image';
-import logo from '@/assets/flash_logo.png';
 
 const inter = Inter({ subsets: ['latin'] });
 
